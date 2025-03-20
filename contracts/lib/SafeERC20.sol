@@ -30,9 +30,10 @@ library SafeERC20 {
         bytes memory signature
     ) internal {
         IUSDCPermit tokenPermit = IUSDCPermit(address(token));
-        uint256 nonceBefore = tokenPermit.nonces(owner);
-        tokenPermit.permit(owner, spender, value, deadline, signature);
-        uint256 nonceAfter = tokenPermit.nonces(owner);
-        require(nonceAfter == nonceBefore + 1, "SafeERC20: permit did not succeed");
+        try tokenPermit.permit(owner, spender, value, deadline, signature) {} catch {
+            if (tokenPermit.allowance(owner, spender) < value) {
+                revert("SafeERC20: permit did not succeed");
+            }
+        }
     }
 }

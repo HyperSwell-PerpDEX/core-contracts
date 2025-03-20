@@ -46,4 +46,8 @@ interface IUSDCPermit {
      * prevents a signature from being used multiple times.
      */
     function nonces(address owner) external view returns (uint256);
+
+    /// @notice Returns the remaining number of tokens that `spender` is allowed
+    /// to spend on behalf of `owner`
+    function allowance(address owner, address spender) external view returns (uint256);
 }
